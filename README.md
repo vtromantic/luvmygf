@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balões Interativos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #131212 0%, #420303 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', 'Arial', sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* PARTICULAS - FOLHAS VOANDO */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle at 30% 30%, rgba(255,230,0,0.8), rgba(255,230,0,0.3));
+            border-radius: 50% 20% 50% 20%;
+            opacity: 0.6;
+            pointer-events: none;
+            animation: floatRight linear infinite;
+            box-shadow: 0 0 10px rgba(255,230,0,0.5);
+        }
+
+        .particle:nth-child(1) {
+            width: 8px;
+            height: 6px;
+            left: -20px;
+            top: 20%;
+            animation-duration: 25s;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 12px;
+            height: 10px;
+            left: -30px;
+            top: 40%;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+
+        .particle:nth-child(3) {
+            width: 6px;
+            height: 8px;
+            left: -25px;
+            top: 70%;
+            animation-duration: 22s;
+            animation-delay: 12s;
+        }
+
+        .particle:nth-child(4) {
+            width: 10px;
+            height: 7px;
+            left: -20px;
+            top: 10%;
+            animation-duration: 28s;
+            animation-delay: 8s;
+        }
+
+        .particle:nth-child(5) {
+            width: 7px;
+            height: 9px;
+            left: -25px;
+            top: 85%;
+            animation-duration: 26s;
+            animation-delay: 15s;
+        }
+
+        .particle:nth-child(6) {
+            width: 9px;
+            height: 6px;
+            left: -30px;
+            top: 55%;
+            animation-duration: 24s;
+            animation-delay: 3s;
+        }
+
+        @keyframes floatRight {
+            0% {
+                transform: translateX(0) translateY(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateX(calc(100vw + 50px)) translateY(30px) rotate(180deg);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(60px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .balloon {
+            width: 120px;
+            height: 180px;
+            background: linear-gradient(145deg, #ffe600, #c95151);
+            border-radius: 60px 60px 60px 60px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.2),
+                inset 0 2px 10px rgb(255, 255, 255);
+            overflow: hidden;
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 25px solid #ffecd2;
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+
+        .balloon:hover {
+            transform: translateY(-20px) scale(1.15);
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.3),
+                inset 0 3px 15px rgba(255,255,255,0.9);
+        }
+
+        .balloon:hover::before {
+            border-top-color: #fcb69f;
+        }
+
+        .balloon img {
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .balloon:hover img {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        /* ESTADO ABERTO - RETÂNGULO MAIOR */
+        .balloon.open {
+            width: 320px !important;
+            height: 240px !important;
+            border-radius: 20px !important;
+            background: linear-gradient(145deg, rgba(255,230,0,0.98), rgba(201,81,81,0.98)) !important;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.4),
+                0 0 40px rgba(255,230,0,0.6),
+                inset 0 2px 20px rgba(255,255,255,0.8) !important;
+            transform: none !important;
+            z-index: 1000;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .balloon.open::before {
+            display: none !important;
+        }
+
+        .balloon.open img {
+            width: 60px;
+            height: 60px;
+            top: 20px;
+            left: 20px;
+            transform: none;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+
+        /* CONTEÚDO DO TEXTO COM FONTE E BRILHO */
+        .balloon-content {
+            position: absolute;
+            top: 50%;
+            left: 100px;
+            transform: translateY(-50%);
+            width: 180px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .balloon.open .balloon-content {
+            opacity: 1;
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        .balloon-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            background: linear-gradient(45deg, #fff, #ffe600, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            text-shadow: 
+                0 0 10px rgba(255,230,0,0.8),
+                0 0 20px rgba(255,255,255,0.6);
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .balloon-content h3::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .balloon-content p {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.95);
+            text-shadow: 
+                0 1px 3px rgba(0,0,0,0.8),
+                0 0 8px rgba(255,255,255,0.3);
+            position: relative;
+        }
+
+        .balloon-content p::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,230,0,0.6), transparent);
+            animation: underline-glow 3s infinite;
+        }
+
+        @keyframes underline-glow {
+            0%, 100% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+
+        .balloon:nth-child(1) {
+            background: linear-gradient(145deg,  #ffe600, #c95151);
+        }
+
+        .balloon:nth-child(1)::before {
+            border-top-color: #ffeaa7;
+        }
+
+        .balloon:nth-child(1):hover {
+            background: linear-gradient(145deg,  #ffe600, #c95151);
+        }
+
+        .balloon:nth-child(1):hover::before {
+            border-top-color: #fdcb6e;
+        }
+
+        .balloon:nth-child(2) {
+            background: linear-gradient(145deg,  #ffe600, #c95151);
+        }
+
+        .balloon:nth-child(2)::before {
+            border-top-color: #fdcb6e;
+        }
+
+        .balloon:nth-child(2):hover {
+            background: linear-gradient(145deg, #ffe600, #c95151);
+        }
+
+        .balloon:nth-child(2):hover::before {
+            border-top-color: #f39c12;
+        }
+
+        .balloon:nth-child(3) {
+            background: linear-gradient(145deg, #ffe600, #c95151);
+        }
+
+        .balloon:nth-child(3)::before {
+            border-top-color: #74b9ff;
+        }
+
+        .balloon:nth-child(3):hover {
+            background: linear-gradient(145deg,  #ffe600, #c95151);
+        }
+
+        .balloon:nth-child(3):hover::before {
+            border-top-color: #55a3ff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                gap: 20px;
+            }
+            
+            .balloon {
+                width: 100px;
+                height: 150px;
+            }
+            
+            .balloon.open {
+                width: 280px !important;
+                height: 200px !important;
+            }
+            
+            .balloon-content {
+                left: 80px;
+                width: 160px;
+            }
+            
+            .balloon-content h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 6 PARTÍCULAS DOURADAS VOANDO COMO FOLHAS -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="container">
+        <!-- Balão 1 - Flor -->
+        <div class="balloon">
+            <img src="<img width="673" height="980" alt="Image" src="https://github.com/user-attachments/assets/67e6d00f-04b2-4cb2-9adf-ba91777627b5" />
+" alt="Flor">
+            <div class="balloon-content">
+                <h3>🌸 Lírio</h3>
+                <p>Lírios são cheirosos, lindos e alguns até mesmo venenosos,
+                    assim como você... Na natureza, o mais belo é o mais perigoso, 
+                    sorte a minha que gosto de bichos exoticos"></perigoso></p>
+            </div>
+        </div>
+
+        <!-- Balão 2 - Sol -->
+        <div class="balloon">
+            <img src="<img width="512" height="512" alt="Image" src="https://github.com/user-attachments/assets/849945c2-30c9-4e98-811f-882b85273d6a" />" alt="Sol">
+            <div class="balloon-content">
+                <h3>☀️ Sol Radiante</h3>
+                <p>tão intenso que aquece até o que em mim era frio e ainda assim,
+                    me deixa à sombra da saudade,
+                    com a marca do seu amor nas minhas costas.</p>
+            </div>
+        </div>
+
+        <!-- Balão 3 - Lua -->
+        <div class="balloon">
+            <img src="<img width="334" height="350" alt="Image" src="https://github.com/user-attachments/assets/38b7ac4d-108f-41fe-9bf6-3ce5646e1999" />
+" alt="Lua">
+            <div class="balloon-content">
+                <h3>🌙 Lua Misteriosa</h3>
+                <p>chegada mansa... Guardando mistérios e é na sua ausência que a noite pesa mais em mim.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const balloons = document.querySelectorAll('.balloon');
+        
+        balloons.forEach(balloon => {
+            balloon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Toggle classe open
+                this.classList.toggle('open');
+                
+                // Remove classe open de outros balões
+                balloons.forEach(otherBalloon => {
+                    if (otherBalloon !== this) {
+                        otherBalloon.classList.remove('open');
+                    }
+                });
+            });
+        });
+
+        // Fecha todos os balões ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.balloon')) {
+                balloons.forEach(balloon => {
+                    balloon.classList.remove('open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
